@@ -63,7 +63,9 @@ const deleteProducts = async(productsToDelete: Array<string>) => {
     const db = client.db('finerare')
     const coll = db.collection('Products')
 
-    return await coll.deleteMany({ _id: { $in: productsToDelete.map((id: string) => new ObjectId(id)) } });
+    const result = await coll.deleteMany({ _id: { $in: productsToDelete.map((id: string) => new ObjectId(id)) } });
+    
+    return result.deletedCount > 0
 }
 
 const syncData = async() => {

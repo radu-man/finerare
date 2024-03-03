@@ -4,7 +4,7 @@ import { addProducts, deleteProducts, getProducerById, getProductById, getProduc
 const Product = new GraphQLObjectType({
     name: 'Product',
     fields: () => ({
-        id: { type: GraphQLID },
+        _id: { type: GraphQLID },
         vintage: { type: GraphQLString },
         name: { type: GraphQLString },
         producerId: { type: GraphQLString },
@@ -20,7 +20,7 @@ const Product = new GraphQLObjectType({
 const ProductWithoutProducer = new GraphQLObjectType({
     name: 'ProductNoProducer',
     fields: () => ({
-        id: { type: GraphQLID },
+        _id: { type: GraphQLID },
         vintage: { type: GraphQLString },
         name: { type: GraphQLString },
         producerId: { type: GraphQLString }
@@ -30,7 +30,7 @@ const ProductWithoutProducer = new GraphQLObjectType({
 const Producer = new GraphQLObjectType({
     name: 'Producer',
     fields: () => ({
-        id: { type: GraphQLID },
+        _id: { type: GraphQLID },
         name: { type: GraphQLString },
         country: { type: GraphQLString },
         region: { type: GraphQLString },
@@ -75,25 +75,25 @@ const RootMutation = new GraphQLObjectType({
                 products: { type: GraphQLList(ProductInputType) },
             },
             resolve(parent, args) {
-                addProducts(args.products)
+                return addProducts(args.products)
             }
           },
         updateProduct: {
             type: Product,
             args: {
-                id: { type: GraphQLNonNull(GraphQLID) },
+                _id: { type: GraphQLNonNull(GraphQLID) },
                 name: { type: GraphQLString },
                 vintage: { type: GraphQLString },
                 producerId: { type: GraphQLID },
              },
             resolve(parent, args) {
-              const { id, ...updateData } = args;
+              const { _id, ...updateData } = args;
 
-              return updateProduct(id, updateData);
+              return updateProduct(_id, updateData);
             },
         },
         deleteProducts: {
-            type: Product,
+            type: GraphQLBoolean,
             args: { productsToDelete: { type: GraphQLList(GraphQLID) } },
             resolve(parent, args) {
                 return deleteProducts(args.productsToDelete)
