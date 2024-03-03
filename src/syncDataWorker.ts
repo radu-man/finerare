@@ -114,7 +114,15 @@
 
     stream.on("error", async (error) => {
       const logColl = db.collection("logs");
-      await logColl.insertOne({ aborted: new Date() });
+
+      await logColl.insertOne({
+        error: 'Data stream error',
+        date: new Date(),
+        minute: new Date().getMinutes(),
+        errorName: error.name,
+        errorMessage: error.message
+      })
+
       console.error("Stream aborted:", error);
     });
   }

@@ -64,7 +64,7 @@ const deleteProducts = async(productsToDelete: Array<string>) => {
     const coll = db.collection('Products')
 
     const result = await coll.deleteMany({ _id: { $in: productsToDelete.map((id: string) => new ObjectId(id)) } });
-    
+
     return result.deletedCount > 0
 }
 
@@ -86,11 +86,7 @@ const syncData = async() => {
             errorName: error.name,
             errorMessage: error.message
         })
-
-        console.log('Worker error: ', error)
     })
-
-    return true
 }
 
 export {

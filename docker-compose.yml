@@ -1,13 +1,32 @@
 version: "3"
 
 services:
-  server:
+
+  backend:
     build: .
     container_name: server
     restart: always
     ports:
       - 5000:5000
     volumes:
-      - ./src:/app
-      - /node_modules
-     
+      - .:/app
+      - /app/node_modules
+    environment:
+      - DB_URI=mongodb://127.0.0.1:27017
+    depends_on:
+      - mongo
+    networks:
+      - express-mongo
+
+  mongo:
+    container_name: mongo
+    restart: always
+    image: mongo:6.0.14
+    volumes:
+      - ./data:/data/db
+    networks:
+      - express-mongo
+    expose:
+      - 27017
+networks:
+  express-mongo:
