@@ -1,4 +1,4 @@
-import { client } from "./db";
+const { client } = require("./db");
 
 const mockData = {
     products: [
@@ -34,10 +34,16 @@ const mockData = {
 
 const seedData = async() => {
     const db = client.db('finerare')
-    const coll = db.collection('Producers')
+    const producers = db.collection('Producers')
 
-    await coll.insertMany(mockData.producers);
+    await producers.insertMany(mockData.producers);
+
+    const products = db.collection('Products')
+
+    await products.insertMany(mockData.products);
 }
+
+(async() => await seedData())()
 
 export {
     mockData,

@@ -34,7 +34,10 @@ const addProducts = async(products: Array<Product>) => {
     const db = client.db('finerare')
     const coll = db.collection('Products')
     
-    const result = await coll.insertMany(products)
+    const result = await coll.insertMany(products.map((product: Product) => ({
+        ...product,
+        producerId: new ObjectId(product.producerId)
+    })))
     
     return result.ops;
 }
@@ -66,8 +69,6 @@ const deleteProducts = async(productsToDelete: Array<string>) => {
 const syncData = async() => {
     const syncWorker = new Worker('./src/syncDataWorker.ts');
 
-    syncWorker.postMessage('start');
-
     syncWorker.on('message', (message) => {
         console.log('Worker message: ', message)
     })
@@ -79,7 +80,9 @@ const syncData = async() => {
         await coll.insertOne({
             error: 'Worker failed to sync Data',
             date: new Date(),
-            minute: new Date().getMinutes()
+            minute: new Date().getMinutes(),
+            errorName: error.name,
+            errorMessage: error.message
         })
 
         console.log('Worker error: ', error)

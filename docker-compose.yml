@@ -8,22 +8,6 @@ services:
     ports:
       - 5000:5000
     volumes:
-      - .:/app
+      - ./src:/app
       - /node_modules
-    depends_on:
-      - mongo
-    networks:
-      - express-mongo
-
-  mongo:
-    container_name: mongo
-    restart: always
-    image: mongo:4.2.0
-    volumes:
-      - ./data:/data/db
-    networks:
-      - express-mongo
-    expose:
-      - 27017
-networks:
-  express-mongo:
+     
